@@ -14,7 +14,7 @@ import java.util.Scanner;
 public class Sys {
 	
 	private static Sys impl = null;
-	private static LogWriter writer = null;
+	private static LogWriter writer = new StandardLogWriter();
 	
 	public static void init(Configuration configuration, Arguments arguments) {
 		impl = new Sys(configuration, arguments);
