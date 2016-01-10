@@ -6,7 +6,7 @@ import main.java.Main;
 public class Runner {
 	
 	public static void main(String[] args) {
-		Main.main(new String[] { });
+		testDefault();
 	}
 	
 	public static void testDefault() {
@@ -15,6 +15,10 @@ public class Runner {
 	
 	public static void testDryRun() {
 		Main.main(new String[] { "--dry-run" });
+	}
+	
+	public static void testMerge() {
+		Main.main(new String[] { "--merge" });
 	}
 	
 	public static void testUsage() {

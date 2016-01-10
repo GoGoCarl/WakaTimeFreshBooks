@@ -2,6 +2,8 @@ package main.java;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 
@@ -47,6 +49,7 @@ public class Main {
 			Sys.println("");
 			Sys.println("--dry-run              -- see what will be logged (true by default, unless --submit is used)");
 			Sys.println("--interactive          -- with --submit, run in interactive mode, enter messages as entry is logged, choose what to log");
+			Sys.println("--merge                -- merge project time logs into a single entry");
 			Sys.println("--submit               -- submit timelogs (nothing ever gets submitted unless this flag is present)");
 			Sys.println("--timestamps           -- print start and end timestamps to log");
 			Sys.println("--verbose              -- verbose output and logging");
@@ -89,6 +92,7 @@ public class Main {
 		boolean submit = arguments.containsKey("--submit");
 		boolean interactive = arguments.containsKey("--interactive");
 		boolean verbose = arguments.containsKey("--verbose");
+		boolean merge = arguments.containsKey("--merge");
 		String project = arguments.value("-p");
 		
 		WakaTimeAPI waka = new WakaTimeAPI(configuration);
@@ -99,6 +103,24 @@ public class Main {
 		Sys.log("Fetching logs for %s...", date);
 		
 		Duration[] durations = waka.getDurations(date, project);
+		if (merge) {
+			Map<String, Double> map = new LinkedHashMap<>();
+			for (Duration duration : durations) {
+				double hours = 0;
+				if (map.containsKey(duration.getProject()))
+					hours = map.get(duration.getProject()).doubleValue();
+				hours += duration.getDuration();
+				map.put(duration.getProject(), Double.valueOf(hours));
+			}
+			durations = new Duration[map.size()];
+			int index = 0;
+			for (Map.Entry<String, Double> entry : map.entrySet()) {
+				Duration duration = new Duration();
+				duration.setProject(entry.getKey());
+				duration.setDuration(entry.getValue());
+				durations[index++] = duration;
+			}
+		}
 		
 		Sys.log("  * Found %s entries from WakaTime...", durations.length);
 		

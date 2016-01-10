@@ -76,6 +76,16 @@ java -jar w2f.jar --submit
 
 All of your time logs for that day that have associated projects will be immediately submitted as time entries to FreshBooks.
 
+Wakatime may split your time logs into many separate logs, especially if
+you are in and out of files often, or task switching.  To merge all logs
+into a single entry when submitting, use the `--merge` option:
+
+```{r, engine='shell'}
+java -jar w2f.jar --submit --merge
+```
+
+The merge command can also be used in dry run mode as well.
+
 To choose which time entries should be sent, and associate notes with these logs, run in interactive mode:
 
 ```{r, engine='shell'}
