@@ -49,10 +49,12 @@ public class Main {
 			Sys.println("");
 			Sys.println("--dry-run              -- see what will be logged (true by default, unless --submit is used)");
 			Sys.println("--interactive          -- with --submit, run in interactive mode, enter messages as entry is logged, choose what to log");
-			Sys.println("--merge                -- merge project time logs into a single entry");
+			Sys.println("--merge                -- merge time logs into a single entry by project");
 			Sys.println("--submit               -- submit timelogs (nothing ever gets submitted unless this flag is present)");
 			Sys.println("--timestamps           -- print start and end timestamps to log");
 			Sys.println("--verbose              -- verbose output and logging");
+			Sys.println("--quiet                -- print only to log, nothing to standard out");
+			Sys.println("--silent               -- no output, not even to logs");
 			Sys.println("");
 			Sys.println("");
 			Sys.println("Configure Every-Run Settings (with respect to config file in -c):");

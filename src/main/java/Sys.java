@@ -14,9 +14,16 @@ import java.util.Scanner;
 public class Sys {
 	
 	private static Sys impl = null;
+	private static LogWriter writer = null;
 	
 	public static void init(Configuration configuration, Arguments arguments) {
 		impl = new Sys(configuration, arguments);
+		if (arguments.containsKey("--silent"))
+			writer = new SilentLogWriter();
+		else if (arguments.containsKey("--quiet"))
+			writer = new QuietLogWriter();
+		else
+			writer = new StandardLogWriter();
 	}
 	
 	public static void finish() {
@@ -30,29 +37,19 @@ public class Sys {
 	}
 	
 	public static String print(String template, Object... args) {
-		String message = String.format(template, args);
-		System.out.print(message);
-		return message;
+		return writer.print(template, args);
 	}
 	
 	public static String println(String template, Object... args) {
-		String message = String.format(template, args);
-		System.out.println(message);
-		return message;
+		return writer.println(template, args);
 	}
 	
 	public static String error(String template, Object... args) {
-		String message = String.format("(!) ERROR: " + template, args);
-		System.out.println(message);
-		if (impl != null) impl.logs.add(message);
-		return message;
+		return writer.error(template, args);
 	}
 	
 	public static String log(String template, Object... args) {
-		String message = String.format(template, args);
-		System.out.println(message);
-		if (impl != null) impl.logs.add(message);
-		return message;
+		return writer.log(template, args);
 	}
 	
 	private final int MAX_LOG_LINES;
@@ -140,6 +137,98 @@ public class Sys {
 				if (writer != null) writer.close();
 			}
 		}
+	}
+	
+	static interface LogWriter {
+		
+		public String print(String template, Object... args);
+		
+		public String println(String template, Object... args);
+		
+		public String error(String template, Object... args);
+		
+		public String log(String template, Object... args);
+		
+	}
+	
+	static class StandardLogWriter implements LogWriter {
+		
+		public String print(String template, Object... args) {
+			String message = String.format(template, args);
+			System.out.print(message);
+			return message;
+		}
+		
+		public String println(String template, Object... args) {
+			String message = String.format(template, args);
+			System.out.println(message);
+			return message;
+		}
+		
+		public String error(String template, Object... args) {
+			String message = String.format("(!) ERROR: " + template, args);
+			System.out.println(message);
+			if (impl != null) impl.logs.add(message);
+			return message;
+		}
+		
+		public String log(String template, Object... args) {
+			String message = String.format(template, args);
+			System.out.println(message);
+			if (impl != null) impl.logs.add(message);
+			return message;
+		}
+		
+	}
+	
+	/**
+	 * Print only to log, nothing to standard out.
+	 */
+	static class QuietLogWriter implements LogWriter {
+		
+		public String print(String template, Object... args) {
+			return String.format(template, args);
+		}
+		
+		public String println(String template, Object... args) {
+			return String.format(template, args);
+		}
+		
+		public String error(String template, Object... args) {
+			String message = String.format("(!) ERROR: " + template, args);
+			if (impl != null) impl.logs.add(message);
+			return message;
+		}
+		
+		public String log(String template, Object... args) {
+			String message = String.format(template, args);
+			if (impl != null) impl.logs.add(message);
+			return message;
+		}
+		
+	}
+	
+	/**
+	 * Print nothing.
+	 */
+	static class SilentLogWriter implements LogWriter {
+		
+		public String print(String template, Object... args) {
+			return String.format(template, args);
+		}
+		
+		public String println(String template, Object... args) {
+			return String.format(template, args);
+		}
+		
+		public String error(String template, Object... args) {
+			return String.format("(!) ERROR: " + template, args);
+		}
+		
+		public String log(String template, Object... args) {
+			return String.format(template, args);
+		}
+		
 	}
 
 }

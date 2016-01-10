@@ -134,6 +134,12 @@ By default, this file will only store a maximum of 1000 lines. To change, this, 
 java -jar w2f.jar --set-event-log-size={num_lines}
 ```
 
+Output can also be controlled with the `--quiet` flag or `--silent`
+flag.  Both options will suppress output from standard output, which is
+good for background jobs.  The `--quiet` flag will still print output to
+the log file, while the `--silent` flag will not print anything
+anywhere.
+
 ## Additional Usage Options
 
 You can view all the options available to you by running:
