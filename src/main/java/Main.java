@@ -19,6 +19,8 @@ public class Main {
 	}
 	
 	public static void run(String[] args) throws WFError {
+		configureSSL();
+		
 		Arguments arguments = new Arguments();
 		arguments.parse(args);
 		
@@ -223,5 +225,8 @@ public class Main {
 		return value;
 	}
 	
+	private static void configureSSL() {
+		System.setProperty("https.protocols", "TLSv1.2");
+	}
 
 }
